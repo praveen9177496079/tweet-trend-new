@@ -1,7 +1,5 @@
 pipeline {
     stages {
-       
-
         stage('SonarQube analysis') {
         environment {
           scannerHome = tool 'sonar-scanner'
