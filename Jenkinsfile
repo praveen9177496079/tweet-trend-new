@@ -1,13 +1,10 @@
 pipeline {
-    agent {
-        node {
-            label 'maven'
-        }
-    }
+    agent any
+
     stages {
         stage('Hello') {
             steps {
-                echo 'Hello World'
+                git branch: 'main', url: 'https://github.com/praveen9177496079/tweet-trend-new.git'
             }
         }
     }
