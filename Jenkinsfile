@@ -3,5 +3,6 @@ pipeline {
         node {
             label 'maven'
         }
-    }}
+    }
+}    
 
