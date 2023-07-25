@@ -9,14 +9,14 @@ environment {
     PATH = "/opt/apache-maven-3.9.2/bin:$PATH"
 }
     stages {
-        stage("build"){
-            steps {
-                 echo "----------- build started ----------"
-                sh 'mvn clean deploy -Dmaven.test.skip=true'
-                 echo "----------- build complted ----------"
-            }
+      stage("build"){
+        steps {
+          echo "----------- build started ----------"
+            sh 'mvn clean deploy -Dmaven.test.skip=true'
+          echo "----------- build complted ----------"
         }
-        stage("test"){
+      }
+      stage("test"){
             steps{
                 echo "----------- unit test started ----------"
                 sh 'mvn surefire-report:report'
@@ -24,7 +24,7 @@ environment {
             }
         }
 
-        stage('SonarQube analysis') {
+      stage('SonarQube analysis') {
         environment {
           scannerHome = tool 'sonar-scanner'
         }
@@ -34,7 +34,7 @@ environment {
             }
           }
         }
-        stage("Quality Gate"){
+      stage("Quality Gate"){
             steps {
               script {
                 timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
@@ -46,7 +46,7 @@ environment {
               }
             }
           }
-        stage("Jar Publish") {
+      stage("Jar Publish") {
           steps {
             script {
                     echo '<--------------- Jar Publish Started --------------->'
@@ -69,7 +69,7 @@ environment {
                      echo '<--------------- Jar Publish Ended --------------->'  
             
             }
-        }   
+         }   
+      }
     }
-  }
 }
