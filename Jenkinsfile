@@ -1,12 +1,12 @@
 def registry = 'https://praveen01.jfrog.io'
 pipeline {
-  agent {
-    node {
-	  label 'maven'
-	}
-  } 	
+    agent {
+        node {
+            label 'maven'
+        }
+    }
 environment {
-    PATH = "/opt/apache-maven-3.9.3/bin:$PATH"
+    PATH = "/opt/apache-maven-3.9.2/bin:$PATH"
 }
     stages {
         stage("build"){
@@ -24,29 +24,28 @@ environment {
             }
         }
 
-        stage('SonarQube analysis') {
-        environment {
-          scannerHome = tool 'sonar-scanner'
-        }
-          steps{
-            withSonarQubeEnv('sonarqube-server') { // If you have configured more than one global server connection, you can specify its name
-              sh "${scannerHome}/bin/sonar-scanner"
-            }
-          }
-        }
-        stage("Quality Gate"){
-          steps {
-            script {
-              timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
-              def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
-              if (qg.status != 'OK') {
-              error "Pipeline aborted due to quality gate failure: ${qg.status}"
-              }
-              }
-            }
-          }
-        }
-        
+    stage('SonarQube analysis') {
+    environment {
+      scannerHome = tool 'sonar-scanner'
+    }
+    steps{
+    withSonarQubeEnv('sonarqube-server') { // If you have configured more than one global server connection, you can specify its name
+      sh "${scannerHome}/bin/sonar-scanner"
+    }
+    }
+  }
+  stage("Quality Gate"){
+    steps {
+        script {
+        timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
+    def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+    if (qg.status != 'OK') {
+      error "Pipeline aborted due to quality gate failure: ${qg.status}"
+    }
+  }
+}
+    }
+  }
         stage("Jar Publish") {
           steps {
             script {
@@ -70,10 +69,7 @@ environment {
                      echo '<--------------- Jar Publish Ended --------------->'  
             
             }
-          }   
         }   
-
-
-
     }
-}    
+  }
+}
